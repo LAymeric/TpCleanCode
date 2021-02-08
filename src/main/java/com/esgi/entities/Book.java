@@ -1,5 +1,7 @@
 package com.esgi.entities;
 
+import org.json.simple.JSONObject;
+
 public class Book {
     private String id;
     private String title;
@@ -35,5 +37,14 @@ public class Book {
                 + "\nAuthor : " + author
                 + "\nAvailability : " + (available ? "Yes" : "No")
                 + "\n    ******";
+    }
+
+    public JSONObject toJSONObject(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("title", title);
+        jsonObject.put("author", author);
+        jsonObject.put("available", available);
+        return jsonObject;
     }
 }

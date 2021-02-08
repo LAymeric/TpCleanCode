@@ -25,6 +25,23 @@ public class BookService {
         displayBooks(myBooks);
     }
 
+    public static boolean tryToAddABook(String title, String author){
+        boolean success = false;
+        try (FileReader reader = new FileReader(filePath))
+        {
+            JSONArray books = (JSONArray) jsonParser.parse(reader);
+            int nextIndex = books.size() + 1;
+            Book newBook = new Book(String.valueOf(nextIndex), title, author, true);
+            books.add(newBook.toJSONObject());
+            saveBooks(books);
+            success = true;
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
     public static boolean tryToGiveBackABook(String bookId, String userId){
         boolean success = false;
         try (FileReader reader = new FileReader(filePath))
