@@ -1,6 +1,5 @@
 package com.esgi.services;
 
-import com.esgi.entities.Book;
 import com.esgi.entities.User;
 import com.esgi.entities.UserType;
 import org.json.simple.JSONArray;
