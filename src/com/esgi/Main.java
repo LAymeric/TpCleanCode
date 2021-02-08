@@ -32,7 +32,7 @@ public class Main {
             if(connectedUser.getType().equals(UserType.MEMBER)){
                 System.out.println("2 - My Books");
             }
-            if(connectedUser.getType().equals(UserType.MEMBER)){
+            if(connectedUser.getType().equals(UserType.LIBRARIAN)){
                 System.out.println("3 - Add a new book");
             }
             System.out.println("4 - Logout");
@@ -50,6 +50,7 @@ public class Main {
                 displayBrowseBooks();
                 break;
             case "2":
+                displayMyBooks();
                 break;
             case "3":
                 break;
@@ -61,6 +62,21 @@ public class Main {
                 displayMenu();
                 break;
         }
+    }
+
+    private static void displayMyBooks(){
+        System.out.println("Here are your books. Please type the id of a book to give it back. Press q to go back to the menu");
+        BookService.displayUserBooks(connectedUser.getLogin());
+        String bookId = s.next();
+        if(!bookId.equals("q")){
+            boolean success = BookService.tryToGiveBackABook(bookId, connectedUser.getLogin());
+            if(success){
+                System.out.println("You successfully gave back a book.");
+            }else{
+                System.out.println("Oh no, you can't give that back!");
+            }
+        }
+        displayMenu();
     }
 
     private static void displayLogin(){
@@ -83,7 +99,7 @@ public class Main {
         if(connectedUser != null){
             System.out.println("If you would like to borrow a book, please type its id. If you want to go back to the menu, press q ");
         }
-        System.out.println(" If you want to go back to the menu, press q");
+        System.out.println("If you want to go back to the menu, press q");
         String choice = s.next();
         if(choice.equals("q")){
             displayMenu();

@@ -13,6 +13,18 @@ public class Reservation {
         this.date = date;
     }
 
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
     public JSONObject toJSONObject(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("userLogin", userLogin);
