@@ -3,19 +3,19 @@ package com.esgi.entities;
 import org.json.simple.JSONObject;
 
 public class Reservation {
-    private String userId;
+    private String userLogin;
     private String bookId;
     private String date;
 
-    public Reservation(String userId, String bookId, String date) {
-        this.userId = userId;
+    public Reservation(String userLogin, String bookId, String date) {
+        this.userLogin = userLogin;
         this.bookId = bookId;
         this.date = date;
     }
 
     public JSONObject toJSONObject(){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", userId);
+        jsonObject.put("userLogin", userLogin);
         jsonObject.put("bookId", bookId);
         jsonObject.put("date", date);
         return jsonObject;

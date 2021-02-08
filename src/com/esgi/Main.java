@@ -3,6 +3,7 @@ package com.esgi;
 import com.esgi.entities.User;
 import com.esgi.entities.UserType;
 import com.esgi.services.BookService;
+import com.esgi.services.UserService;
 
 import java.util.Scanner;
 
@@ -43,6 +44,7 @@ public class Main {
     private static void manageMenuChoice(String input){
         switch(input){
             case "0":
+                displayLogin();
                 break;
             case "1":
                 displayBrowseBooks();
@@ -52,12 +54,27 @@ public class Main {
             case "3":
                 break;
             case "4":
+                displayLogout();
                 break;
             default:
                 System.out.println("You can't choose that, please try again ! ");
                 displayMenu();
                 break;
         }
+    }
+
+    private static void displayLogin(){
+        System.out.println("You chose to login. Please enter your login or a new one to continue : ");
+        String login = s.next();
+        connectedUser = UserService.login(login);
+        System.out.println("Wonderful ! you are now connected as " + connectedUser.getLogin());
+        displayMenu();
+    }
+
+    private static void displayLogout(){
+        System.out.println("You chose to logout. Have a nice day ! ");
+        connectedUser = null;
+        displayMenu();
     }
 
     private static void displayBrowseBooks(){
@@ -71,7 +88,7 @@ public class Main {
         if(choice.equals("q")){
             displayMenu();
         }else if(connectedUser != null){
-            boolean succeedToBorrowABook = BookService.tryToBorrowABook(choice, connectedUser.getId());
+            boolean succeedToBorrowABook = BookService.tryToBorrowABook(choice, connectedUser.getLogin());
             if(succeedToBorrowABook){
                 System.out.println("Bravo ! You just borrowed a book! you can retrieve it in the section 'My Books'. You have four weeks to bring it back");
             }else{

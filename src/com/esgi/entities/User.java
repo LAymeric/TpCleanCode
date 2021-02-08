@@ -1,18 +1,14 @@
 package com.esgi.entities;
 
+import org.json.simple.JSONObject;
+
 public class User {
-    private String id;
     private UserType type;
     private String login;
 
-    public User(String id, UserType type, String login) {
-        this.id = id;
+    public User(UserType type, String login) {
         this.type = type;
         this.login = login;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public UserType getType() {
@@ -21,5 +17,12 @@ public class User {
 
     public String getLogin() {
         return login;
+    }
+
+    public JSONObject toJSONObject(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", type.toString());
+        jsonObject.put("login", login);
+        return jsonObject;
     }
 }
