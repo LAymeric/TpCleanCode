@@ -71,12 +71,14 @@ public class BookService {
             }
 
             saveBooks(newBooks);
+            ReservationService.saveReservation(bookId, userId);
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return success;
     }
+
 
     private static void saveBooks(JSONArray books){
         try (FileWriter file = new FileWriter(filePath)) {
