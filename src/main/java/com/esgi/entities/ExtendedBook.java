@@ -1,7 +1,6 @@
 package com.esgi.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class ExtendedBook extends Book{
     private LocalDate maxGivenBackDate;
