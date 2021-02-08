@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class UserService {
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "./src/com/esgi/data/users.json";
+    private static final String filePath = "./src/main/java/com/esgi/data/users.json";
 
     public static User login(String login){
         User user = findUser(login);

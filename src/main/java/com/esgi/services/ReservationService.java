@@ -11,12 +11,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ReservationService {
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "./src/com/esgi/data/reservations.json";
+    private static final String filePath = "./src/main/java/com/esgi/data/reservations.json";
 
     public static List<Reservation> getMyReservations(String userLogin){
         List<Reservation> reservationList = new ArrayList<>();

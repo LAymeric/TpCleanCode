@@ -12,14 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class BookService {
 
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "./src/com/esgi/data/books.json";
+    private static final String filePath = "src/main/java/com/esgi/data/books.json";
 
     public static void displayUserBooks(String userLogin){
         List<Reservation> reservations = ReservationService.getMyReservations(userLogin);
