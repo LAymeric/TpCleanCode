@@ -15,48 +15,58 @@ import java.util.List;
 
 public class ReservationService {
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "./src/main/java/com/esgi/data/reservations.json";
+    private final String filePath;
 
-    public static List<Reservation> getMyReservations(String userLogin){
+    public ReservationService(String filePath) {
+        this.filePath = filePath + "reservations.json";
+    }
+
+    public List<Reservation> getMyReservations(String userLogin){
         List<Reservation> reservationList = new ArrayList<>();
         JSONArray reservationsJson = getAllReservations();
         for (JSONObject resJson : (Iterable<JSONObject>) reservationsJson){
-            reservationList.add(new Reservation(userLogin,
-                    (String)resJson.get("bookId"),
-                    (String)resJson.get("date")));
+            if(userLogin.equals(resJson.get("userLogin"))){
+                reservationList.add(new Reservation(userLogin,
+                        (String)resJson.get("bookId"),
+                        (String)resJson.get("date")));
+            }
         }
         return reservationList;
     }
 
-    public static void saveReservation(String bookId, String userLogin){
+    public boolean saveReservation(String bookId, String userLogin){
         Reservation newReservation = new Reservation(userLogin, bookId, LocalDate.now().toString());
         JSONArray allReservations = getAllReservations();
         JSONObject reservationJson = newReservation.toJSONObject();
         allReservations.add(reservationJson);
-        try (FileWriter file = new FileWriter(filePath)) {
+        try (FileWriter file = new FileWriter(this.filePath)) {
             file.write(allReservations.toJSONString());
             file.flush();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void removeReservation(String bookId, String userLogin){
+    public boolean removeReservation(String bookId, String userLogin){
         Reservation res = new Reservation(userLogin, bookId, LocalDate.now().toString());
         JSONArray allReservations = getAllReservations();
         JSONObject reservationJson = res.toJSONObject();
         allReservations.remove(reservationJson);
-        try (FileWriter file = new FileWriter(filePath)) {
+        try (FileWriter file = new FileWriter(this.filePath)) {
             file.write(allReservations.toJSONString());
             file.flush();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    private static JSONArray getAllReservations(){
+    private JSONArray getAllReservations(){
         JSONArray reservations = new JSONArray();
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             reservations = (JSONArray) jsonParser.parse(reader);
 

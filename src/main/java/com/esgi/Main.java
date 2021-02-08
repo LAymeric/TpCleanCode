@@ -4,17 +4,18 @@ import com.esgi.entities.User;
 import com.esgi.entities.UserType;
 import com.esgi.services.BookService;
 import com.esgi.services.UserService;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Main {
 
     private static User connectedUser;
     private static Scanner s;
+    private static BookService bookService;
+    private static UserService userService;
 
     public static void main(String[] args) {
+        bookService = new BookService("src/main/java/com/esgi/data/");
+        userService = new UserService("src/main/java/com/esgi/data/");
         System.out.println("Welcome to our library! ");
         s = new Scanner(System.in);
         displayMenu();
@@ -52,13 +53,25 @@ public class Main {
                 displayBrowseBooks();
                 break;
             case "2":
-                displayMyBooks();
+                if(connectedUser.getType().equals(UserType.MEMBER)){
+                    displayMyBooks();
+                }else{
+                    displayMenu();
+                }
                 break;
             case "3":
-                displayAddABook();
+                if(connectedUser.getType().equals(UserType.LIBRARIAN)){
+                    displayAddABook();
+                }else{
+                    displayMenu();
+                }
                 break;
             case "4":
-                displayLogout();
+                if(connectedUser != null){
+                    displayLogout();
+                }else{
+                    displayMenu();
+                }
                 break;
             default:
                 System.out.println("You can't choose that, please try again ! ");
@@ -73,7 +86,7 @@ public class Main {
         String title = s.nextLine();
         System.out.println("Please type the author :");
         String author = s.nextLine();
-        boolean success = BookService.tryToAddABook(title, author);
+        boolean success = bookService.tryToAddABook(title, author);
         if(success){
             System.out.println("Bravo ! You add a new book to the library");
         }else {
@@ -84,10 +97,10 @@ public class Main {
 
     private static void displayMyBooks(){
         System.out.println("Here are your books. Please type the id of a book to give it back. Press q to go back to the menu");
-        BookService.displayUserBooks(connectedUser.getLogin());
+        bookService.displayUserBooks(connectedUser.getLogin());
         String bookId = s.nextLine();
         if(!bookId.equals("q")){
-            boolean success = BookService.tryToGiveBackABook(bookId, connectedUser.getLogin());
+            boolean success = bookService.tryToGiveBackABook(bookId, connectedUser.getLogin());
             if(success){
                 System.out.println("You successfully gave back a book.");
             }else{
@@ -100,7 +113,7 @@ public class Main {
     private static void displayLogin(){
         System.out.println("You chose to login. Please enter your login or a new one to continue : ");
         String login = s.nextLine();
-        connectedUser = UserService.login(login);
+        connectedUser = userService.login(login);
         System.out.println("Wonderful ! you are now connected as " + connectedUser.getLogin());
         displayMenu();
     }
@@ -113,7 +126,7 @@ public class Main {
 
     private static void displayBrowseBooks(){
         System.out.println("\n\nThis is our book collection : ");
-        BookService.displayAllBooks();
+        bookService.displayAllBooks();
         if(connectedUser != null){
             System.out.println("If you would like to borrow a book, please type its id. If you want to go back to the menu, press q ");
         }
@@ -122,7 +135,7 @@ public class Main {
         if(choice.equals("q")){
             displayMenu();
         }else if(connectedUser != null){
-            boolean succeedToBorrowABook = BookService.tryToBorrowABook(choice, connectedUser.getLogin());
+            boolean succeedToBorrowABook = bookService.tryToBorrowABook(choice, connectedUser.getLogin());
             if(succeedToBorrowABook){
                 System.out.println("Bravo ! You just borrowed a book! you can retrieve it in the section 'My Books'. You have four weeks to bring it back");
             }else{

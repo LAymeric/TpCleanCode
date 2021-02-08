@@ -13,9 +13,13 @@ import java.io.IOException;
 
 public class UserService {
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "./src/main/java/com/esgi/data/users.json";
+    private final String filePath;
 
-    public static User login(String login){
+    public UserService(String filePath) {
+        this.filePath = filePath + "users.json";
+    }
+
+    public User login(String login){
         User user = findUser(login);
         if(user == null){
             // we will create this user
@@ -25,9 +29,9 @@ public class UserService {
         return user;
     }
 
-    private static void saveNewUser(User user){
+    private void saveNewUser(User user){
         JSONArray users = getAllUsers();
-        try (FileWriter file = new FileWriter(filePath)) {
+        try (FileWriter file = new FileWriter(this.filePath)) {
             JSONObject jsonUser = user.toJSONObject();
             users.add(jsonUser);
             file.write(users.toJSONString());
@@ -37,9 +41,9 @@ public class UserService {
         }
     }
 
-    private static JSONArray getAllUsers(){
+    private JSONArray getAllUsers(){
         JSONArray users = new JSONArray();
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             users = (JSONArray) jsonParser.parse(reader);
 
@@ -49,9 +53,9 @@ public class UserService {
         return users;
     }
 
-    private static User findUser(String login){
+    private User findUser(String login){
         User user = null;
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             //Read JSON file
             JSONArray users = (JSONArray) jsonParser.parse(reader);

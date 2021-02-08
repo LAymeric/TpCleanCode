@@ -17,17 +17,23 @@ import java.util.List;
 public class BookService {
 
     private static final JSONParser jsonParser = new JSONParser();
-    private static final String filePath = "src/main/java/com/esgi/data/books.json";
+    private final String filePath;
+    private final ReservationService reservationService;
 
-    public static void displayUserBooks(String userLogin){
-        List<Reservation> reservations = ReservationService.getMyReservations(userLogin);
+    public BookService(String filePath) {
+        this.filePath = filePath + "books.json";
+        this.reservationService = new ReservationService(filePath);
+    }
+
+    public void displayUserBooks(String userLogin){
+        List<Reservation> reservations = this.reservationService.getMyReservations(userLogin);
         List<ExtendedBook> myBooks = getBooksFromReservations(reservations);
         displayBooks(myBooks);
     }
 
-    public static boolean tryToAddABook(String title, String author){
+    public boolean tryToAddABook(String title, String author){
         boolean success = false;
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             JSONArray books = (JSONArray) jsonParser.parse(reader);
             int nextIndex = books.size() + 1;
@@ -42,9 +48,9 @@ public class BookService {
         return success;
     }
 
-    public static boolean tryToGiveBackABook(String bookId, String userId){
+    public boolean tryToGiveBackABook(String bookId, String userId){
         boolean success = false;
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             JSONArray newBooks = new JSONArray();
             //Read JSON file
@@ -65,7 +71,9 @@ public class BookService {
             }
 
             saveBooks(newBooks);
-            ReservationService.removeReservation(bookId, userId);
+            if(success){
+                success = this.reservationService.removeReservation(bookId, userId);
+            }
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -73,7 +81,7 @@ public class BookService {
         return success;
     }
 
-    private static List<ExtendedBook> getBooksFromReservations(List<Reservation> reservations){
+    private List<ExtendedBook> getBooksFromReservations(List<Reservation> reservations){
         List<ExtendedBook> myBooks = new ArrayList<>();
         reservations.forEach(res -> {
             Book book = getBookById(res.getBookId());
@@ -90,9 +98,9 @@ public class BookService {
         return myBooks;
     }
 
-    private static Book getBookById(String idBook){
+    private Book getBookById(String idBook){
         Book book = null;
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             //Read JSON file
             JSONArray books = (JSONArray) jsonParser.parse(reader);
@@ -121,8 +129,8 @@ public class BookService {
         }
     }
 
-    public static void displayAllBooks(){
-        try (FileReader reader = new FileReader(filePath))
+    public void displayAllBooks(){
+        try (FileReader reader = new FileReader(this.filePath))
         {
             //Read JSON file
             JSONArray books = (JSONArray) jsonParser.parse(reader);
@@ -139,10 +147,10 @@ public class BookService {
         }
     }
 
-    public static boolean tryToBorrowABook(String bookId, String userId){
+    public boolean tryToBorrowABook(String bookId, String userId){
         // first check if book exists, and if available
         boolean success = false;
-        try (FileReader reader = new FileReader(filePath))
+        try (FileReader reader = new FileReader(this.filePath))
         {
             JSONArray newBooks = new JSONArray();
             //Read JSON file
@@ -170,17 +178,17 @@ public class BookService {
             }
 
             saveBooks(newBooks);
-            ReservationService.saveReservation(bookId, userId);
-
+            if(success){
+                success = this.reservationService.saveReservation(bookId, userId);
+            }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return success;
     }
 
-
-    private static void saveBooks(JSONArray books){
-        try (FileWriter file = new FileWriter(filePath)) {
+    private void saveBooks(JSONArray books){
+        try (FileWriter file = new FileWriter(this.filePath)) {
             file.write(books.toJSONString());
             file.flush();
         } catch (IOException e) {
