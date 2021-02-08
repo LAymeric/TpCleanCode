@@ -1,19 +1,19 @@
 package com.esgi.entities;
 
 public class Book {
-    private int id;
+    private String id;
     private String title;
     private String author;
-    private Boolean borrowed;
+    private Boolean available;
 
-    public Book(int id, String title, String author, Boolean borrowed) {
+    public Book(String id, String title, String author, Boolean available) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.borrowed = borrowed;
+        this.available = available;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -24,7 +24,16 @@ public class Book {
     public String getAuthor() {
         return author;
     }
-    public Boolean getBorrowed() {
-        return borrowed;
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    @Override
+    public String toString() {
+        return "Id : " + id
+                + "\nTitle : " + title
+                + "\nAuthor : " + author
+                + "\nAvailability : " + (available ? "Yes" : "No")
+                + "\n    ******";
     }
 }

@@ -1,17 +1,17 @@
 package com.esgi.entities;
 
 public class User {
-    private int id;
+    private String id;
     private UserType type;
     private String login;
 
-    public User(int id, UserType type, String login) {
+    public User(String id, UserType type, String login) {
         this.id = id;
         this.type = type;
         this.login = login;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
