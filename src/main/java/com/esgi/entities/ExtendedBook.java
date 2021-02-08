@@ -15,7 +15,7 @@ public class ExtendedBook extends Book{
     public String toString() {
         String result = "This book has to be given back before the : " + maxGivenBackDate + "\n";
         LocalDate now = LocalDate.now();
-        if(maxGivenBackDate.isBefore(now)) {
+        if(now.isAfter(maxGivenBackDate)) {
             result += "Oh no ! YOU ARE LATE TO GIVE THIS BOOK BACK ! \n";
         }
         result += super.toString();
